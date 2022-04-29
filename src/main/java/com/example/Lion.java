@@ -30,3 +30,4 @@ public class Lion {
         return feline.getFood("Хищник");
     }
 }
+//не менял базовый класс
