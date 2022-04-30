@@ -22,11 +22,11 @@ public class CatTest {
         Assert.assertEquals("Ожидается совпадение звуков", expectedSound, actualSound);
     }
 
-    //Переделал, убрал Мокито.
+    //Надеюсь, я осознал корректно=)
     @Test
     public void shouldReturnCorrectMeal() throws Exception{
-        Feline feline = new Feline();
         Cat cat = new Cat(feline);
+        Mockito.when(feline.eatMeat()).thenReturn(List.of("Животные", "Птицы", "Рыба"));
         List<String> expectedEatMeat = List.of("Животные", "Птицы", "Рыба");
         List<String> actualEatMeat = cat.getFood();
         Assert.assertEquals(expectedEatMeat, actualEatMeat);

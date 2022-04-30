@@ -1,16 +1,31 @@
 package com.example;
 
+import org.hamcrest.Matcher;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
+import java.util.List;
+
+import static org.junit.Assert.assertThrows;
 
 @RunWith(Parameterized.class)
 public class LionTest {
 
     @Mock
     Feline feline;
+
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     public String actualSex;
     public boolean expectedSex;
@@ -25,30 +40,35 @@ public class LionTest {
         return new Object[][] {
                 {"Самец", true},
                 {"Самка", false},
-                {"Трансгендер", false}
         };
     }
 
-    //Сделал, что просто тест падает. Пытался сделать модно через assertThrows, не получилось=(
     @Test
     public void checkManeOfLineCorrectSex() throws Exception{
         Lion lion = new Lion(actualSex, feline);
         Assert.assertEquals("Ожидается совпадение пола", expectedSex, lion.doesHaveMane());
     }
 
-    //В целом, работает, но, мне кажется, т.к. вызывается feline.getKittens(), лучше вынести в отдельный тест с мокированием
+    //Спасибо! Получилось!
+    @Test
+    public void checkManeOfLineInCorrectSex(){
+        assertThrows(Exception.class, () -> new Lion("Трансгендер", feline));
+    }
+
+
     @Test
     public void shouldHaveKittens() throws Exception{
         int expectedKitten = 1;
-        Lion lion = new Lion(actualSex, feline);
+        Lion lion = new Lion("Самка", feline);
+        Mockito.when(feline.getKittens()).thenReturn(1);
         Assert.assertEquals("Ждём одну живность",expectedKitten, lion.getKittens());
     }
 
-    //Тут нет изоляции, потому что не могу вызвать feline.getFood("Хищник"), т.к. не могу запустить тест с @RunWith(MockitoJUnitRunner.class), он уже параметризирован или могу?
-    //@Test
-    //public void shouldHaveCorrectListOfMeal() throws Exception{
-    //List<String> expectedMeal = List.of("Животные", "Птицы", "Рыба");
-    //    Lion lion = new Lion(actualSex, feline);
-    //    Assert.assertEquals("Ожидаем совпадение перекусика",expectedMeal, lion.getFood());
-    //}
+    @Test
+    public void shouldHaveCorrectListOfMeal() throws Exception{
+        Lion lion = new Lion("Самец", feline);
+        List<String> expected = List.of("Животные", "Птицы", "Рыба");
+        Mockito.when(feline.getFood("Хищник")).thenReturn(List.of("Животные", "Птицы", "Рыба"));
+        Assert.assertEquals("Получен некорректный список продуктов питания для Хищника", expected, lion.getFood());
+    }
 }
