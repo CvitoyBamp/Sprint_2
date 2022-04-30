@@ -10,9 +10,9 @@ import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CatTest {
+
     @Mock
     Feline feline;
-
 
     @Test
     public void shouldDoSound() {
@@ -22,13 +22,13 @@ public class CatTest {
         Assert.assertEquals("Ожидается совпадение звуков", expectedSound, actualSound);
     }
 
+    //Переделал, убрал Мокито.
     @Test
     public void shouldReturnCorrectMeal() throws Exception{
+        Feline feline = new Feline();
         Cat cat = new Cat(feline);
-        Mockito.when(cat.getFood()).thenReturn(List.of("Животные", "Птицы", "Рыба"));
-        List<String> actualMeal = cat.getFood();
-        List<String> expectedMeal = List.of("Животные", "Птицы", "Рыба");
-        Assert.assertEquals("Ожидается совпадение типа животного", expectedMeal, actualMeal);
+        List<String> expectedEatMeat = List.of("Животные", "Птицы", "Рыба");
+        List<String> actualEatMeat = cat.getFood();
+        Assert.assertEquals(expectedEatMeat, actualEatMeat);
     }
-
 }
