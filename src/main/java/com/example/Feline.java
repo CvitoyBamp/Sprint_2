@@ -23,3 +23,4 @@ public class Feline extends Animal implements Predator {
     }
 
 }
+//не менял базовый класс
